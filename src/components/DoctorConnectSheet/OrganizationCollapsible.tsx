@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { apis } from "@/apis";
 import { useQuery } from "@tanstack/react-query";
 import UserCard from "./UserCard";
+import { useTranslation } from "react-i18next";
+import { I18NNAMESPACE } from "@/lib/constants";
 
 type OrganizationCollapsibleProps = {
   facilityId: string;
@@ -22,6 +24,8 @@ export default function OrganizationCollapsible({
   organization,
   level = 0,
 }: OrganizationCollapsibleProps) {
+  const { t } = useTranslation(I18NNAMESPACE);
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: organizationUsers, isPending: isOrganizationUsersPending } =
@@ -59,7 +63,7 @@ export default function OrganizationCollapsible({
               />
               <span className="font-medium">{organization.name}</span>
               <Badge variant="outline" className="ml-2 text-xs capitalize">
-                {organization.org_type}
+                {t(`organization_type_${organization.org_type}`)}
               </Badge>
             </div>
             {organization.description && (
@@ -70,7 +74,9 @@ export default function OrganizationCollapsible({
           </CollapsibleTrigger>
           {!!organizationUsers?.results.length && (
             <span className="text-xs text-muted-foreground ml-auto">
-              {organizationUsers?.results.length} members
+              {t("organization_members", {
+                count: organizationUsers?.results.length,
+              })}
             </span>
           )}
         </div>
@@ -79,7 +85,7 @@ export default function OrganizationCollapsible({
           {isOrganizationUsersPending && isSubOrganizationsPending ? (
             <div className="flex items-center justify-center h-64 gap-2">
               <Loader2 className="animate-spin size-5" />
-              <p>Loading users and sub organizations</p>
+              <p>{t("loading_users_sub_organizations")}</p>
             </div>
           ) : (
             <>
@@ -107,7 +113,7 @@ export default function OrganizationCollapsible({
               {!organizationUsers?.results?.length &&
                 !subOrganizations?.results?.length && (
                   <div className="py-2 text-center text-sm text-muted-foreground">
-                    No staff members or sub-organizations found
+                    {t("no_users_sub_organizations")}
                   </div>
                 )}
             </>

@@ -43,18 +43,15 @@ export default function DoctorConnectSheet({
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-[800px] overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Doctor Connect</SheetTitle>
-          <SheetDescription>
-            Find and connect with doctors, nurses, and volunteers across the
-            various departments and teams.
-          </SheetDescription>
+          <SheetTitle>{t("doctor_connect")}</SheetTitle>
+          <SheetDescription>{t("doctor_connect_description")}</SheetDescription>
         </SheetHeader>
 
         <div className="grid gap-4 mt-4">
           {isPending ? (
             <div className="flex items-center justify-center h-64 gap-2">
               <Loader2 className="animate-spin size-5" />
-              <p>Loading organizations</p>
+              <p>{t("loading_organizations")}</p>
             </div>
           ) : (
             organizations?.results

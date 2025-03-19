@@ -1,1 +1,11 @@
-{}
+{
+  "doctor_connect": "Doctor Connect",
+  "doctor_connect_description": "Find and connect with doctors, nurses, and volunteers across the various departments and teams.",
+  "loading_organizations": "Loading organizations",
+  "organization_members": "{{count}} member(s)",
+  "organization_type_root": "Root",
+  "organization_type_dept": "Department",
+  "organization_type_team": "Team",
+  "loading_users_sub_organizations": "Loading users and sub-organizations",
+  "no_users_sub_organizations": "No users or sub-organizations"
+}
