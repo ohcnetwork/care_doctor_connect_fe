@@ -41,7 +41,7 @@ export default function DoctorConnectSheet({
       <SheetTrigger asChild>
         <Button className={className}>{t("doctor_connect")}</Button>
       </SheetTrigger>
-      <SheetContent className="w-full sm:max-w-[800px] overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-[600px] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>{t("doctor_connect")}</SheetTitle>
           <SheetDescription>{t("doctor_connect_description")}</SheetDescription>
