@@ -10,7 +10,11 @@ export type PatientInfoCardQuickActionsProps = {
 const PatientInfoCardQuickActions: FC<PatientInfoCardQuickActionsProps> = (
   props
 ) => {
-  return <DoctorConnectSheet {...props} />;
+  return (
+    <div className="doctor-connect-container">
+      <DoctorConnectSheet {...props} />
+    </div>
+  );
 };
 
 export default PatientInfoCardQuickActions;
