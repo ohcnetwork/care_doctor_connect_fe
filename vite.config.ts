@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [
     federation({
-      name: "care_abdm",
+      name: "care_doctor_connect",
       filename: "remoteEntry.js",
       exposes: {
         "./manifest": "./src/manifest.ts",
@@ -40,5 +40,10 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  preview: {
+    port: 5173,
+    allowedHosts: true,
+    host: "0.0.0.0",
   },
 });
