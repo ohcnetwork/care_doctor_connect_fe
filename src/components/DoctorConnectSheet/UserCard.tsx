@@ -34,14 +34,12 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
             <div className="flex items-center gap-x-2 flex-wrap">
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <h4 className="font-medium text-base truncate min-w-28">
+                  <TooltipTrigger className="w-full">
+                    <h4 className="font-medium text-base truncate">
                       {userFullName}
                     </h4>
                   </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{userFullName}</p>
-                  </TooltipContent>
+                  <TooltipContent>{userFullName}</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
 
