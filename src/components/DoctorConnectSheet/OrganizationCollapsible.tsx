@@ -4,7 +4,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { use, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { FacilityOrganization } from "@/types/organization";
@@ -30,7 +30,7 @@ export default function OrganizationCollapsible({
 }: OrganizationCollapsibleProps) {
   const { t } = useTranslation(I18NNAMESPACE);
 
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(level === 0 ? true : false);
 
   const { data: organizationUsers, isPending: isOrganizationUsersPending } =
     useQuery({
@@ -38,6 +38,7 @@ export default function OrganizationCollapsible({
       queryFn: () =>
         apis.organizations.users.list(facilityId, organization.id, {
           ...filters,
+          limit: 1000,
         }),
       enabled: isExpanded,
     });
