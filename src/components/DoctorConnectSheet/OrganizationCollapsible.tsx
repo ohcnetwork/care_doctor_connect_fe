@@ -1,28 +1,32 @@
-import { FacilityOrganization } from "@/types/organization";
+import { ChevronRight, Loader2 } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronRight, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { use, useMemo, useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
+import { FacilityOrganization } from "@/types/organization";
+import { Filters } from ".";
+import { I18NNAMESPACE } from "@/lib/constants";
+import UserCard from "./UserCard";
 import { apis } from "@/apis";
 import { useQuery } from "@tanstack/react-query";
-import UserCard from "./UserCard";
 import { useTranslation } from "react-i18next";
-import { I18NNAMESPACE } from "@/lib/constants";
 
 type OrganizationCollapsibleProps = {
   facilityId: string;
   organization: FacilityOrganization;
   level?: number;
+  filters: Filters;
 };
 
 export default function OrganizationCollapsible({
   facilityId,
   organization,
   level = 0,
+  filters,
 }: OrganizationCollapsibleProps) {
   const { t } = useTranslation(I18NNAMESPACE);
 
@@ -32,7 +36,9 @@ export default function OrganizationCollapsible({
     useQuery({
       queryKey: ["organization_users", facilityId, organization.id],
       queryFn: () =>
-        apis.organizations.users.list(facilityId, organization.id, {}),
+        apis.organizations.users.list(facilityId, organization.id, {
+          ...filters,
+        }),
       enabled: isExpanded,
     });
 
@@ -45,6 +51,15 @@ export default function OrganizationCollapsible({
         }),
       enabled: isExpanded,
     });
+
+  const filteredOrganizationUsers = useMemo(() => {
+    return organizationUsers?.results.filter((user) => {
+      if (filters.role) {
+        return user.role.id === filters.role;
+      }
+      return true;
+    });
+  }, [organizationUsers, filters]);
 
   return (
     <div
@@ -72,10 +87,10 @@ export default function OrganizationCollapsible({
               </p>
             )}
           </CollapsibleTrigger>
-          {!!organizationUsers?.results.length && (
+          {!!filteredOrganizationUsers?.length && (
             <span className="text-xs text-muted-foreground ml-auto">
               {t("organization_members", {
-                count: organizationUsers?.results.length,
+                count: filteredOrganizationUsers?.length,
               })}
             </span>
           )}
@@ -89,9 +104,9 @@ export default function OrganizationCollapsible({
             </div>
           ) : (
             <>
-              {!!organizationUsers?.results.length && (
+              {!!filteredOrganizationUsers?.length && (
                 <div className="grid grid-cols-1 gap-2 mt-2">
-                  {organizationUsers?.results.map((user) => (
+                  {filteredOrganizationUsers.map((user) => (
                     <UserCard key={user.id} user={user} />
                   ))}
                 </div>
@@ -105,12 +120,13 @@ export default function OrganizationCollapsible({
                       facilityId={facilityId}
                       organization={organization}
                       level={level + 1}
+                      filters={filters}
                     />
                   ))}
                 </div>
               )}
 
-              {!organizationUsers?.results?.length &&
+              {!filteredOrganizationUsers?.length &&
                 !subOrganizations?.results?.length && (
                   <div className="py-2 text-center text-sm text-muted-foreground">
                     {t("no_users_sub_organizations")}

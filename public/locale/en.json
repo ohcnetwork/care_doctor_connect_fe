@@ -7,5 +7,8 @@
   "organization_type_dept": "Department",
   "organization_type_team": "Team",
   "loading_users_sub_organizations": "Loading users and sub-organizations",
-  "no_users_sub_organizations": "No users or sub-organizations"
+  "no_users_sub_organizations": "No users or sub-organizations",
+  "select_role": "Select role",
+  "all": "All",
+  "filter_by_role": "Filter by role"
 }

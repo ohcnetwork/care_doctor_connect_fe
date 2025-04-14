@@ -1,7 +1,9 @@
-import { FacilityOrganization } from "@/types/organization";
 import { queryString, request } from "./request";
-import { PaginatedResponse } from "./types";
+
+import { FacilityOrganization } from "@/types/organization";
 import { FacilityUser } from "@/types/user";
+import { PaginatedResponse } from "./types";
+import { Role } from "@/types/role";
 
 export const apis = {
   organizations: {
@@ -26,6 +28,7 @@ export const apis = {
         query?: {
           limit?: number;
           offset?: number;
+          role?: string;
         }
       ) => {
         return await request<PaginatedResponse<FacilityUser>>(
@@ -33,6 +36,12 @@ export const apis = {
             queryString(query)
         );
       },
+    },
+  },
+
+  roles: {
+    list: async () => {
+      return await request<PaginatedResponse<Role>>("/api/v1/role/");
     },
   },
 };

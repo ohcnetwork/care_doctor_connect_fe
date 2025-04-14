@@ -1,3 +1,5 @@
+import { Role } from "@/types/role";
+
 export type User = {
   id: string;
   first_name: string;
@@ -10,21 +12,6 @@ export type User = {
   user_type: "staff" | "admin";
   gender: "male" | "female" | "other";
   username: string;
-};
-
-export type Permission = {
-  context: string;
-  description?: string;
-  name: string;
-  slug: string;
-};
-
-export type Role = {
-  id: string;
-  name: string;
-  description?: string;
-  is_system?: boolean;
-  permissions: Permission[];
 };
 
 export type FacilityUser = {
