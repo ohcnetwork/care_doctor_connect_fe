@@ -1,6 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clipboard, Phone } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { formatDate, formatUserName, toast } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -26,9 +32,19 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
 
           <div className="flex flex-col flex-1 min-w-0 gap-2.5">
             <div className="flex items-center gap-x-2 flex-wrap">
-              <h4 className="font-medium text-base truncate min-w-28">
-                {userFullName}
-              </h4>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <h4 className="font-medium text-base truncate min-w-28">
+                      {userFullName}
+                    </h4>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{userFullName}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
               <div className="text-xs font-medium">
                 {facilityUser.role.name}
               </div>
