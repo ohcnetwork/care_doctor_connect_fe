@@ -4,6 +4,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { use, useMemo, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { FacilityOrganization } from "@/types/organization";
@@ -12,7 +13,6 @@ import { I18NNAMESPACE } from "@/lib/constants";
 import UserCard from "./UserCard";
 import { apis } from "@/apis";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type OrganizationCollapsibleProps = {
@@ -52,6 +52,15 @@ export default function OrganizationCollapsible({
       enabled: isExpanded,
     });
 
+  const filteredOrganizationUsers = useMemo(() => {
+    return organizationUsers?.results.filter((user) => {
+      if (filters.role) {
+        return user.role.id === filters.role;
+      }
+      return true;
+    });
+  }, [organizationUsers, filters]);
+
   return (
     <div
       key={organization.id}
@@ -78,10 +87,10 @@ export default function OrganizationCollapsible({
               </p>
             )}
           </CollapsibleTrigger>
-          {!!organizationUsers?.results.length && (
+          {!!filteredOrganizationUsers?.length && (
             <span className="text-xs text-muted-foreground ml-auto">
               {t("organization_members", {
-                count: organizationUsers?.results.length,
+                count: filteredOrganizationUsers?.length,
               })}
             </span>
           )}
@@ -95,9 +104,9 @@ export default function OrganizationCollapsible({
             </div>
           ) : (
             <>
-              {!!organizationUsers?.results.length && (
+              {!!filteredOrganizationUsers?.length && (
                 <div className="grid grid-cols-1 gap-2 mt-2">
-                  {organizationUsers?.results.map((user) => (
+                  {filteredOrganizationUsers.map((user) => (
                     <UserCard key={user.id} user={user} />
                   ))}
                 </div>
@@ -117,7 +126,7 @@ export default function OrganizationCollapsible({
                 </div>
               )}
 
-              {!organizationUsers?.results?.length &&
+              {!filteredOrganizationUsers?.length &&
                 !subOrganizations?.results?.length && (
                   <div className="py-2 text-center text-sm text-muted-foreground">
                     {t("no_users_sub_organizations")}

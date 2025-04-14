@@ -13,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { I18NNAMESPACE } from "@/lib/constants";
@@ -21,7 +22,6 @@ import OrganizationCollapsible from "./OrganizationCollapsible";
 import { PatientInfoCardQuickActionsProps } from "@/components/pluggables/PatientInfoCardQuickActions";
 import { apis } from "@/apis";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type DoctorConnectSheetProps = PatientInfoCardQuickActionsProps;
@@ -44,6 +44,19 @@ export default function DoctorConnectSheet({
     queryKey: ["roles"],
     queryFn: () => apis.roles.list(),
   });
+
+  useEffect(() => {
+    const doctorRole = roles?.results.find(
+      (role) => role.name.toLowerCase() === "doctor"
+    );
+
+    if (doctorRole) {
+      setFilters((prev) => ({
+        ...prev,
+        role: doctorRole.id,
+      }));
+    }
+  }, [roles]);
 
   const { data: organizations, isPending } = useQuery({
     queryKey: ["organizations", encounter?.facility.id],
@@ -72,6 +85,7 @@ export default function DoctorConnectSheet({
         <div className="mt-4 flex gap-2 flex-col">
           <Select
             name="role"
+            value={filters.role}
             onValueChange={(value) => setFilters({ ...filters, role: value })}
           >
             <SelectTrigger>
@@ -83,7 +97,7 @@ export default function DoctorConnectSheet({
             </SelectTrigger>
             <SelectContent>
               {roles?.results?.map((role) => (
-                <SelectItem key={role.id} value={role.id} title={role.name}>
+                <SelectItem key={role.id} value={role.id}>
                   <div className="flex items-start flex-col">
                     <p>{role.name}</p>
                     <p className="text-xs text-muted-foreground">
