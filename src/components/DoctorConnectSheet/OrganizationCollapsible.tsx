@@ -38,6 +38,7 @@ export default function OrganizationCollapsible({
       queryFn: () =>
         apis.organizations.users.list(facilityId, organization.id, {
           ...filters,
+          limit: 1000,
         }),
       enabled: isExpanded,
     });
