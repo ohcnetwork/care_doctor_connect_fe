@@ -10,5 +10,8 @@
   "no_users_sub_organizations": "No users or sub-organizations",
   "select_role": "Select role",
   "all": "All",
-  "filter_by_role": "Filter by role"
+  "filter_by_role": "Filter by role",
+  "whatsapp_chat_start_message": "{{userName}}, I have a query regarding a patient.\n\nPatient Link: {{encounterLink}}",
+  "whatsapp_not_installed": "Please install WhatsApp to connect with the doctor",
+  "phone_number_copied": "Phone number copied to clipboard"
 }
