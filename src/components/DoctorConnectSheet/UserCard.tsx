@@ -103,7 +103,7 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
             <div className="flex items-center gap-x-2 flex-wrap">
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger className="w-full">
+                  <TooltipTrigger className="w-full flex justify-start cursor-default">
                     <h4 className="font-medium text-base truncate">
                       {userFullName}
                     </h4>
