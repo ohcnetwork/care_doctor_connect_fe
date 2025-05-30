@@ -98,7 +98,7 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
       <Card className="overflow-hidden transition-all hover:shadow-md">
         <CardContent className="p-0">
           <div className="flex items-center gap-4 p-4">
-            <Avatar className="h-12 w-12">
+            <Avatar className="size-12">
               <AvatarImage src={user.profile_picture_url} alt={userFullName} />
               <AvatarFallback>{userFullName[0]}</AvatarFallback>
             </Avatar>
@@ -118,7 +118,7 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
                 <UserRound className="size-3" />
                 {facilityUser.role.name}
               </div>
-              <div className="flex items-center text-sm font-light text-muted-foreground mt-1 gap-2">
+              <div className="flex items-center text-sm font-light mt-1 gap-2">
                 <CalendarDays className="size-3" />
                 <span>{formatDate(user.last_login, true)}</span>
               </div>
@@ -171,7 +171,7 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
           </div>
 
           <div className="flex items-center gap-2 px-4 py-3 bg-muted/30 border-t">
-            <Phone className="size-4 text-muted-foreground" />
+            <Phone className="size-4" />
             <span className="text-sm font-medium flex-1">
               {formatPhoneNumberIntl(user.phone_number)}
             </span>
