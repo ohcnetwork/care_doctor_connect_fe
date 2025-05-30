@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { CalendarDays, Copy, Phone, UserRound, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -114,11 +115,11 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
                 </Tooltip>
               </TooltipProvider>
               <div className="text-sm font-light flex gap-2 mt-1 items-center">
-                <UserRound className="h-3 w-3" />
+                <UserRound className="size-3" />
                 {facilityUser.role.name}
               </div>
               <div className="flex items-center text-sm font-light text-muted-foreground mt-1 gap-2">
-                <CalendarDays className="h-3 w-3" />
+                <CalendarDays className="size-3" />
                 <span>{formatDate(user.last_login, true)}</span>
               </div>
             </div>
@@ -129,12 +130,12 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="rounded-full h-10 w-10 border-green-500/20"
+                    className="rounded-full size-10 border-green-500/20"
                     onClick={() =>
                       window.open(`tel:${user.phone_number.replace(/\s/g, "")}`)
                     }
                   >
-                    <Phone className="h-4 w-4" />
+                    <Phone className="size-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -147,7 +148,7 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="rounded-full h-10 w-10 border-green-500/20 text-primary hover:text-primary"
+                    className="rounded-full size-10 border-green-500/20 text-primary hover:text-primary"
                     onClick={connectOnWhatsApp}
                   >
                     <svg
@@ -170,7 +171,7 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
           </div>
 
           <div className="flex items-center gap-2 px-4 py-3 bg-muted/30 border-t">
-            <Phone className="h-4 w-4 text-muted-foreground" />
+            <Phone className="size-4 text-muted-foreground" />
             <span className="text-sm font-medium flex-1">
               {formatPhoneNumberIntl(user.phone_number)}
             </span>
@@ -179,11 +180,12 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className={`h-8 w-8 rounded-full transition-all duration-200 ${
+                  className={cn(
+                    "size-8 rounded-full transition-all duration-200",
                     copied
                       ? "text-green-600 bg-green-50 hover:bg-green-100"
                       : "hover:bg-background"
-                  }`}
+                  )}
                   onClick={() => {
                     navigator.clipboard.writeText(user.phone_number);
                     toast.success(t("phone_number_copied"));
@@ -191,9 +193,9 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
                   }}
                 >
                   {copied ? (
-                    <Check className="h-3.5 w-3.5" />
+                    <Check className="size-4" />
                   ) : (
-                    <Copy className="h-3.5 w-3.5" />
+                    <Copy className="size-4" />
                   )}
                 </Button>
               </TooltipTrigger>
