@@ -190,6 +190,7 @@ export default function UserCard({ user: facilityUser }: UserCardProps) {
                     navigator.clipboard.writeText(user.phone_number);
                     toast.success(t("phone_number_copied"));
                     setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
                   }}
                 >
                   {copied ? (
