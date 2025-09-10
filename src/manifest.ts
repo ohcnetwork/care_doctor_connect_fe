@@ -5,7 +5,7 @@ const manifest = {
   routes: {},
   extends: [],
   components: {
-    PatientInfoCardQuickActions: lazy(
+    PatientInfoCardActions: lazy(
       () => import("./components/pluggables/PatientInfoCardQuickActions")
     ),
   },

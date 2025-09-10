@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { I18NNAMESPACE } from "@/lib/constants";
-import { Loader2 } from "lucide-react";
+import { Loader2, HeadsetIcon } from "lucide-react";
 import OrganizationCollapsible from "./OrganizationCollapsible";
 import { PatientInfoCardQuickActionsProps } from "@/components/pluggables/PatientInfoCardQuickActions";
 import { apis } from "@/apis";
@@ -74,7 +74,10 @@ export default function DoctorConnectSheet({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className={className}>{t("doctor_connect")}</Button>
+        <Button variant="ghost" className={className}>
+          <HeadsetIcon className="h-4 w-4" />
+          {t("doctor_connect")}
+        </Button>
       </SheetTrigger>
       <SheetContent className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
