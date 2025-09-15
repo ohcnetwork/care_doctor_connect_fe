@@ -75,7 +75,6 @@ export default function DoctorConnectSheet({
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="ghost" className={className}>
-          <HeadsetIcon className="h-4 w-4" />
           {t("doctor_connect")}
         </Button>
       </SheetTrigger>
