@@ -40,8 +40,14 @@ export const apis = {
   },
 
   roles: {
-    list: async () => {
-      return await request<PaginatedResponse<Role>>("/api/v1/role/");
+    list: async (query?: {
+      limit?: number;
+      offset?: number;
+      name?: string;
+    }) => {
+      return await request<PaginatedResponse<Role>>(
+        "/api/v1/role/" + queryString(query)
+      );
     },
   },
 };
