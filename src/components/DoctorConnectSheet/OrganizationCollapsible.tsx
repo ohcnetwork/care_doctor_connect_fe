@@ -62,6 +62,13 @@ export default function OrganizationCollapsible({
     });
   }, [organizationUsers, filters]);
 
+  if (
+    !filteredOrganizationUsers?.length &&
+    !subOrganizations?.results?.length
+  ) {
+    return null;
+  }
+
   return (
     <div
       key={organization.id}
