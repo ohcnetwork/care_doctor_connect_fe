@@ -11,7 +11,7 @@ const PatientInfoCardQuickActions: FC<PatientInfoCardQuickActionsProps> = (
   props
 ) => {
   return (
-    <div className="doctor-connect-container w-full">
+    <div className="doctor-connect-container w-full md:w-auto">
       <DoctorConnectSheet {...props} />
     </div>
   );
