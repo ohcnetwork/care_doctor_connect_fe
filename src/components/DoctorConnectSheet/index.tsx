@@ -6,12 +6,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Autocomplete from "@/components/ui/autocomplete";
 import { Button } from "@/components/ui/button";
 import { I18NNAMESPACE } from "@/lib/constants";
-import { Loader2, HeadsetIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import OrganizationCollapsible from "./OrganizationCollapsible";
 import { PatientInfoCardQuickActionsProps } from "@/components/pluggables/PatientInfoCardQuickActions";
 import type { Role } from "@/types/role";
@@ -28,7 +28,10 @@ export type Filters = {
 export default function DoctorConnectSheet({
   encounter,
   className,
+  __meta,
 }: DoctorConnectSheetProps) {
+  const allowedOrganizations = __meta?.allowed_organizations;
+  const allowedRoles = __meta?.allowed_roles;
   const { t } = useTranslation(I18NNAMESPACE);
 
   const [roleSearch, setRoleSearch] = useState("");
@@ -39,22 +42,41 @@ export default function DoctorConnectSheet({
     queryFn: () => apis.roles.list({ name: roleSearch?.trim() ?? undefined }),
   });
 
+  const filteredRoles = useMemo(() => {
+    if (!roles?.results) return [];
+    if (!Array.isArray(allowedRoles) || allowedRoles.length === 0) {
+      return roles.results;
+    }
+    const allowed = allowedRoles.map((name) => name.toLowerCase());
+    return roles.results.filter((role) =>
+      allowed.includes(role.name.toLowerCase())
+    );
+  }, [roles, allowedRoles]);
+
   const filters: Filters = { role: selectedRole?.id ?? "" };
 
   useEffect(() => {
-    const doctorRole = roles?.results.find(
+    const doctorRole = filteredRoles.find(
       (role) => role.name.toLowerCase() === "doctor"
     );
 
     if (doctorRole && !selectedRole) {
       setSelectedRole(doctorRole);
+    } else if (
+      !doctorRole &&
+      !selectedRole &&
+      filteredRoles.length > 0 &&
+      Array.isArray(allowedRoles) &&
+      allowedRoles.length > 0
+    ) {
+      setSelectedRole(filteredRoles[0]);
     }
-  }, [roles, selectedRole]);
+  }, [filteredRoles, selectedRole, allowedRoles]);
 
   const roleOptions =
     [
       selectedRole,
-      ...(roles?.results.filter((role) => role.id !== selectedRole?.id) ?? []),
+      ...filteredRoles.filter((role) => role.id !== selectedRole?.id),
     ]
       .filter(Boolean)
       .map((role) => ({
@@ -128,6 +150,18 @@ export default function DoctorConnectSheet({
           ) : (
             organizations?.results
               ?.filter((organization) => organization.level_cache === 0)
+              .filter((organization) => {
+                if (
+                  !Array.isArray(allowedOrganizations) ||
+                  allowedOrganizations.length === 0
+                ) {
+                  return true;
+                }
+                const allowed = allowedOrganizations.map((name) =>
+                  name.toLowerCase()
+                );
+                return allowed.includes(organization.name.toLowerCase());
+              })
               .map((organization) => (
                 <OrganizationCollapsible
                   key={organization.id}
