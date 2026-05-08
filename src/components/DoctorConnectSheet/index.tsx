@@ -30,8 +30,8 @@ export default function DoctorConnectSheet({
   className,
   __meta,
 }: DoctorConnectSheetProps) {
-  const allowedOrganizations = __meta?.allowed_facility_organizations;
-  const allowedRoles = __meta?.allowed_filter_roles;
+  const allowedOrganizations = __meta?.config?.allowed_facility_organizations;
+  const allowedRoles = __meta?.config?.allowed_filter_roles;
   const { t } = useTranslation(I18NNAMESPACE);
 
   const [roleSearch, setRoleSearch] = useState("");
