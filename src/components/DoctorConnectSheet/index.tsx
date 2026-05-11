@@ -6,12 +6,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 
 import Autocomplete from "@/components/ui/autocomplete";
 import { Button } from "@/components/ui/button";
 import { I18NNAMESPACE } from "@/lib/constants";
-import { Loader2, HeadsetIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import OrganizationCollapsible from "./OrganizationCollapsible";
 import { PatientInfoCardQuickActionsProps } from "@/components/pluggables/PatientInfoCardQuickActions";
 import type { Role } from "@/types/role";
@@ -28,33 +28,50 @@ export type Filters = {
 export default function DoctorConnectSheet({
   encounter,
   className,
+  __meta,
 }: DoctorConnectSheetProps) {
+  const allowedOrganizations = __meta?.config?.allowed_facility_organizations;
+  const allowedRoles = __meta?.config?.allowed_filter_roles;
+  const hasAllowlist = Array.isArray(allowedRoles) && allowedRoles.length > 0;
   const { t } = useTranslation(I18NNAMESPACE);
 
   const [roleSearch, setRoleSearch] = useState("");
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
   const { data: roles } = useQuery({
-    queryKey: ["roles", roleSearch],
-    queryFn: () => apis.roles.list({ name: roleSearch?.trim() ?? undefined }),
+    queryKey: hasAllowlist
+      ? ["roles", "restricted"]
+      : ["roles", "search", roleSearch],
+    queryFn: () => {
+      if (hasAllowlist) return apis.roles.list({ limit: 100 });
+      const trimmed = roleSearch.trim();
+      return apis.roles.list(
+        trimmed ? { name: trimmed, limit: 14 } : { limit: 14 },
+      );
+    },
   });
 
-  const filters: Filters = { role: selectedRole?.id ?? "" };
+  const filteredRoles = useMemo(() => {
+    if (!hasAllowlist) return roles?.results ?? [];
 
-  useEffect(() => {
-    const doctorRole = roles?.results.find(
-      (role) => role.name.toLowerCase() === "doctor"
+    const allowedSet = new Set(
+      (allowedRoles as string[]).map((n) => n.toLowerCase()),
     );
+    const q = roleSearch.trim().toLowerCase();
 
-    if (doctorRole && !selectedRole) {
-      setSelectedRole(doctorRole);
-    }
-  }, [roles, selectedRole]);
+    return (roles?.results ?? []).filter((role) => {
+      if (!allowedSet.has(role.name.toLowerCase())) return false;
+      if (q && !role.name.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [roles, allowedRoles, hasAllowlist, roleSearch]);
+
+  const filters: Filters = { role: selectedRole?.id ?? "" };
 
   const roleOptions =
     [
       selectedRole,
-      ...(roles?.results.filter((role) => role.id !== selectedRole?.id) ?? []),
+      ...filteredRoles.filter((role) => role.id !== selectedRole?.id),
     ]
       .filter(Boolean)
       .map((role) => ({
@@ -104,12 +121,13 @@ export default function DoctorConnectSheet({
             value={selectedRole?.id}
             placeholder={t("filter_by_role")}
             onChange={(value) => {
+              setRoleSearch("");
               if (!value) {
                 setSelectedRole(null);
                 return;
               }
               const role =
-                roles?.results.find((r) => r.id === value) ??
+                filteredRoles.find((r) => r.id === value) ??
                 (selectedRole?.id === value ? selectedRole : undefined);
               if (role) {
                 setSelectedRole(role);
@@ -128,6 +146,18 @@ export default function DoctorConnectSheet({
           ) : (
             organizations?.results
               ?.filter((organization) => organization.level_cache === 0)
+              .filter((organization) => {
+                if (
+                  !Array.isArray(allowedOrganizations) ||
+                  allowedOrganizations.length === 0
+                ) {
+                  return true;
+                }
+                const allowed = allowedOrganizations.map((name) =>
+                  name.toLowerCase(),
+                );
+                return allowed.includes(organization.name.toLowerCase());
+              })
               .map((organization) => (
                 <OrganizationCollapsible
                   key={organization.id}
