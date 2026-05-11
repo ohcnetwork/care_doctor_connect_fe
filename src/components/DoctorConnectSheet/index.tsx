@@ -42,12 +42,13 @@ export default function DoctorConnectSheet({
     queryKey: hasAllowlist
       ? ["roles", "restricted"]
       : ["roles", "search", roleSearch],
-    queryFn: () =>
-      apis.roles.list(
-        hasAllowlist
-          ? { limit: 100 }
-          : { name: roleSearch.trim() || undefined, limit: 14 },
-      ),
+    queryFn: () => {
+      if (hasAllowlist) return apis.roles.list({ limit: 100 });
+      const trimmed = roleSearch.trim();
+      return apis.roles.list(
+        trimmed ? { name: trimmed, limit: 14 } : { limit: 14 },
+      );
+    },
   });
 
   const filteredRoles = useMemo(() => {
