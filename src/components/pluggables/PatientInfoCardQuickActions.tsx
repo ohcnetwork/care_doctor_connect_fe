@@ -5,6 +5,15 @@ import DoctorConnectSheet from "@/components/DoctorConnectSheet";
 export type PatientInfoCardQuickActionsProps = {
   encounter: Encounter;
   className?: string;
+  __meta?: {
+    url?: string;
+    name?: string;
+    config?: {
+      allowed_facility_organizations?: string[];
+      allowed_filter_roles?: string[];
+    };
+    [key: string]: unknown;
+  };
 };
 
 const PatientInfoCardQuickActions: FC<PatientInfoCardQuickActionsProps> = (
