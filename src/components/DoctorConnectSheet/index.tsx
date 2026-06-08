@@ -94,6 +94,7 @@ export default function DoctorConnectSheet({
     queryFn: () =>
       apis.organizations.list(encounter?.facility.id, {
         level_cache: 0,
+        limit: 100,
       }),
     enabled: !!encounter?.facility.id,
   });
